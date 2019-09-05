@@ -83,7 +83,12 @@ int is_operator(const char *ch) {
         if (*(ch + 1) == '=') {
             return TK_CODE_MINUS_EQUAL;
         } else if (*(ch + 1) == '-') {
-            return TK_CODE_DECREMENT;
+            if (*(ch + 2) == '>') {
+                return TK_CODE_IMPLICATION;
+            } else {
+                return TK_CODE_DECREMENT;
+            }
+
         } else {
             return TK_CODE_MINUS;
         }
@@ -95,6 +100,78 @@ int is_operator(const char *ch) {
         } else {
             return TK_CODE_PLUS;
         }
+    } else if (*ch == '=') {
+        if (*(ch + 1) == '=') {
+            return TK_CODE_EQUAL_EQUAL;
+        } else {
+            return TK_CODE_EQUAL;
+        }
+    } else if (*ch == '~') {
+        return TK_CODE_TILDE;
+    } else if (*ch == '|') {
+        if (*(ch + 1) == '='){
+            return TK_CODE_OR_EQUAL;
+        } else if (*(ch + 1) == '|'){
+            return TK_CODE_OR_OR;
+        } else {
+            return TK_CODE_BITWISE_OR;
+        }
+    } else if (*ch == '.') {
+        if (*(ch + 1) == '.' && *(ch + 2) == '.'){
+            return TK_CODE_ELLIPSIS;
+        } else {
+            return  TK_CODE_DIRECT_SELECTION;
+        }
+    } else if (*ch == '<'){
+        if (*(ch + 1) == '='){
+            return TK_CODE_LESS_EQUAL;
+        } else if (*(ch + 1) == '<'){
+            if (*(ch + 2) == '='){
+                return TK_CODE_SHIFT_LEFT_EQUAL;
+            } else {
+                return TK_CODE_SHIFT_LEFT;
+            }
+        } else {
+            return TK_CODE_LESS;
+        }
+    } else if (*ch == '>'){
+        if (*(ch + 1) == '='){
+            return TK_CODE_GREATER_EQUAL;
+        } else if (*(ch + 1) == '>'){
+            if (*(ch + 2) == '='){
+                return TK_CODE_SHIFT_RIGHT_EQUAL;
+            } else {
+                return TK_CODE_SHIFT_RIGHT;
+            }
+        } else {
+            return TK_CODE_GREATER;
+        }
+    } else if (*ch == '/'){
+        if (*(ch + 1) == '='){
+            return TK_CODE_DIVISION_EQUAL;
+        } else {
+            return TK_CODE_DIVISION;
+        }
+    } else if (*ch == '?'){
+        return TK_CODE_QUESTION;
+    } else if (*ch == '('){
+        return TK_CODE_OPEN_BRACKET;
+    } else if (*ch == ')'){
+        return TK_CODE_CLOSE_BRACKET;
+    } else if (*ch == '['){
+        return TK_CODE_SQUARE_OPEN_BRACKET;
+    } else if (*ch == ']'){
+        return TK_CODE_SQUARE_CLOSE_BRACKET;
+    } else if (*ch == '{'){
+        return TK_CODE_FIGURE_OPEN_BRACKET;
+    } else if (*ch == '}'){
+        return TK_CODE_FIGURE_CLOSE_BRACKET;
+    } else if (*ch == ','){
+        return TK_CODE_COMMA;
+    } else if (*ch == ';'){
+        return TK_CODE_SEMICOLON;
+    } else if (*ch == ':'){
+        return TK_CODE_COLON;
     }
 
     return 0;
