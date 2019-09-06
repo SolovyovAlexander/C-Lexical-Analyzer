@@ -1,6 +1,15 @@
-#ifndef CC_COURSE_SCANNER_H
-#define CC_COURSE_SCANNER_H
+#include <stdio.h>
+#include <stdlib.h>
+#include "token.h"
+#include "string.h"
 
-#endif //CC_COURSE_SCANNER_H
 
-struct CToken* get_next_token(char* file_name);
+
+
+
+
+CToken* get_next_token(FILE *fp);
+struct for_check_func{
+    int token_code;
+    int length;
+} typedef fcf;

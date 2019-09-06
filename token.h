@@ -1,3 +1,6 @@
+
+
+
 #ifndef CC_COURSE_TOKENS_H
 #define CC_COURSE_TOKENS_H
 
@@ -46,21 +49,32 @@
 
 //DELIMITERS
 #define TK_CODE_OPEN_BRACKET 36 // '('
-#define TK_CODE_CLOSE_BRACKET 38 // ')'
-#define TK_CODE_SQUARE_OPEN_BRACKET 39 // '['
-#define TK_CODE_SQUARE_CLOSE_BRACKET 40 // ']'
-#define TK_CODE_FIGURE_OPEN_BRACKET 41 // '{'
-#define TK_CODE_FIGURE_CLOSE_BRACKET 42 // '}'
-#define TK_CODE_COMMA 43 // ','
-#define TK_CODE_SEMICOLON 44 // ';'
-#define TK_CODE_COLON 45 // ':'
-#define TK_CODE_ELLIPSIS 46 // '...'
+#define TK_CODE_CLOSE_BRACKET 37 // ')'
+#define TK_CODE_SQUARE_OPEN_BRACKET 38 // '['
+#define TK_CODE_SQUARE_CLOSE_BRACKET 39 // ']'
+#define TK_CODE_FIGURE_OPEN_BRACKET 40 // '{'
+#define TK_CODE_FIGURE_CLOSE_BRACKET 41 // '}'
+#define TK_CODE_COMMA 42 // ','
+#define TK_CODE_SEMICOLON 43 // ';'
+#define TK_CODE_COLON 44 // ':'
+#define TK_CODE_ELLIPSIS 45 // '...'
 
-//KEYWORDS
+//KEYWORD
+#define TK_CODE_KEYWORD 46
+
+//String const
+#define  TK_CODE_STRING 47
 
 
 
 
-struct CToken typedef CToken;
+struct CToken {
+    int code;
+    int span_line;
+    int span_position;
+    short category;
+    char* source;
+    short binary;
+}typedef CToken;
 
 

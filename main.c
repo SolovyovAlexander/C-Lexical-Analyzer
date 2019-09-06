@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include "scanner.h"
+
+
 
 int main() {
 
@@ -7,7 +8,26 @@ int main() {
     printf("Enter name of a file you wish to see\n");
     gets(file_name);
 
-    get_next_token(file_name);
+    char ch;
+
+    FILE *fp;
+
+    fp = fopen(file_name, "r"); // read mode
+
+    if (fp == NULL) {
+        perror("Error while opening the file.\n");
+        exit(EXIT_FAILURE);
+    }
+    int i =0;
+    while (i<1000) {
+
+        get_next_token(fp);
+
+        i++;
+
+    }
+
+
 
     return 0;
 }
