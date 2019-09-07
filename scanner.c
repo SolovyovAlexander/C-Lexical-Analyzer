@@ -300,6 +300,7 @@ CToken *get_next_token(FILE *fp) {
                         fgetc(fp);
                         ch = fgetc(fp);
                         str_length++;
+                        fseek(fp, -1, SEEK_CUR);
                     }
                 }
             }
@@ -318,15 +319,21 @@ CToken *get_next_token(FILE *fp) {
             token2->code = TK_CODE_STRING;
             token2->span_line = linenumber;
             *(token2->source + str_length) = '\0';
-            printf(token2->source);
-            printf("\n");
+            printf("%s\n", token2->source);
+
             fgetc(fp);
+
             return token2;
         }
 
 
         //check char constant
-
+        if (ch == '\''){
+            ch = fgetc(fp);
+            while(ch != '\''){
+                
+            }
+        }
 
         // detection of operators
         char *op_str = malloc(3 * sizeof(char));
