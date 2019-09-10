@@ -19,7 +19,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
     int i =0;
-    while (i<1000) {
+    while (i<10000) {
 
         get_next_token(fp);
 

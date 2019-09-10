@@ -2,9 +2,8 @@
 #include "scanner.h"
 
 
-void define_token(char *str) {
 
-}
+
 
 int is_begin_of_identificator(const char ch) {
     return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_');
@@ -25,6 +24,8 @@ int is_keyword(char *str) {
     return 0;
 
 }
+
+
 
 fcf is_operator(const char *ch) {
     fcf a;
@@ -258,6 +259,7 @@ int linenumber = 1;
 int is_escape_secuence_char(char ch) {
     if (ch == '"') return 1;
     if (ch == '\'') return 1;
+    if (ch == '\\') return 1;
     if (ch == '?') return 1;
     if (ch == 'a') return 1;
     if (ch == 'b') return 1;
@@ -277,6 +279,53 @@ int is_char_from_a_to_f(char ch) {
     if (ch == 'e' || ch == 'E') return 1;
     if (ch == 'f' || ch == 'F') return 1;
     return 0;
+}
+
+
+CToken* get_string_token(FILE* fp){
+    int str_length = 0;
+    char ch = fgetc(fp);
+    CToken *token2 = malloc(sizeof(CToken));
+    token2->code = TK_CODE_STRING;
+    while (ch != '"') {
+        str_length++;
+        if (ch == EOF) {
+            printf("Pls close string, line = %d", linenumber);
+            exit(1);
+        }
+        ch = fgetc(fp);
+        if (ch == '"') {
+            fseek(fp, -3, SEEK_CUR);
+            char ch1 = fgetc(fp);
+            char ch2 = fgetc(fp);
+            if (ch1 != '\\' && ch2 == '\\') {
+                fgetc(fp);
+                ch = fgetc(fp);
+                str_length++;
+                fseek(fp, -1, SEEK_CUR);
+            }
+        }
+    }
+    char *str_const = malloc((str_length + 1) * sizeof(char));
+    fseek(fp, -str_length, SEEK_CUR);
+
+    for (int i = 0; i < str_length; ++i) {
+        *(str_const + i) = fgetc(fp);
+    }
+    token2->source = malloc((str_length + 1) * sizeof(char));
+
+    // copy string to token
+    for (int j = 0; j < str_length; ++j) {
+        *(token2->source + j) = *(str_const + j);
+    }
+    token2->code = TK_CODE_STRING;
+    token2->span_line = linenumber;
+    *(token2->source + str_length) = '\0';
+    printf("%s\n", token2->source);
+
+    fgetc(fp);
+
+    return token2;
 }
 
 CToken *get_char_token(FILE *fp) {
@@ -330,11 +379,42 @@ CToken *get_char_token(FILE *fp) {
         src = realloc(src, (++length) * sizeof(char));
         src[length - 1] = ch;
         fprintf(stderr, "Multiple SYMBOLS in character: %s\n", src);
+
+
         exit(-1);
     }
     token->source = src;
+    printf("This is CHAR %s\n", token->source);
     return token;
 
+}
+
+CToken* get_operator_token(FILE* fp, char ch){
+    CToken *token2 = malloc(sizeof(CToken));
+    token2->code = -1;
+    char *op_str = malloc(3 * sizeof(char));
+    *op_str = ch;
+    *(op_str + 1) = fgetc(fp);
+    *(op_str + 2) = fgetc(fp);
+    fcf operat = is_operator(op_str);
+
+
+    if (operat.token_code > -1) {
+        if (operat.length == 1) {
+            fseek(fp, -2, SEEK_CUR);
+            token2->code = operat.token_code;
+        } else if (operat.length == 2) {
+            fseek(fp, -1, SEEK_CUR);
+            token2->code = operat.token_code;
+        } else {
+            token2->code = operat.token_code;
+        }
+        printf("%d\n", token2->code);
+
+        return token2;
+    }
+    fseek(fp, -2, SEEK_CUR);
+    return token2;
 }
 
 CToken *get_next_token(FILE *fp) {
@@ -364,47 +444,7 @@ CToken *get_next_token(FILE *fp) {
 
         //check string constant
         if (ch == '"') {
-            int str_length = 0;
-            ch = fgetc(fp);
-            while (ch != '"') {
-                str_length++;
-                if (ch == EOF) {
-                    printf("Pls close string, line = %d", linenumber);
-                    exit(1);
-                }
-                ch = fgetc(fp);
-                if (ch == '"') {
-                    fseek(fp, -3, SEEK_CUR);
-                    char ch1 = fgetc(fp);
-                    char ch2 = fgetc(fp);
-                    if (ch1 != '\\' && ch2 == '\\') {
-                        fgetc(fp);
-                        ch = fgetc(fp);
-                        str_length++;
-                        fseek(fp, -1, SEEK_CUR);
-                    }
-                }
-            }
-            char *str_const = malloc((str_length + 1) * sizeof(char));
-            fseek(fp, -str_length, SEEK_CUR);
-
-            for (int i = 0; i < str_length; ++i) {
-                *(str_const + i) = fgetc(fp);
-            }
-            token2->source = malloc((str_length + 1) * sizeof(char));
-
-            // copy string to token
-            for (int j = 0; j < str_length; ++j) {
-                *(token2->source + j) = *(str_const + j);
-            }
-            token2->code = TK_CODE_STRING;
-            token2->span_line = linenumber;
-            *(token2->source + str_length) = '\0';
-            printf("%s\n", token2->source);
-
-            fgetc(fp);
-
-            return token2;
+            return get_string_token(fp);
         }
 
         if (ch == '\'') {
@@ -412,28 +452,11 @@ CToken *get_next_token(FILE *fp) {
         }
 
         // detection of operators
-        char *op_str = malloc(3 * sizeof(char));
-        *op_str = ch;
-        *(op_str + 1) = fgetc(fp);
-        *(op_str + 2) = fgetc(fp);
-        fcf operat = is_operator(op_str);
-
-
-        if (operat.token_code > -1) {
-            if (operat.length == 1) {
-                fseek(fp, -2, SEEK_CUR);
-                token2->code = operat.token_code;
-            } else if (operat.length == 2) {
-                fseek(fp, -1, SEEK_CUR);
-                token2->code = operat.token_code;
-            } else {
-                token2->code = operat.token_code;
-            }
-            printf("%d\n", token2->code);
-
+        token2 = get_operator_token(fp, ch);
+        if(token2->code > -1){
             return token2;
         }
-        fseek(fp, -2, SEEK_CUR);
+
 
         //identificator
         if (is_begin_of_identificator(ch)) {
