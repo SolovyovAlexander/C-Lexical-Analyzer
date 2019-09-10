@@ -65,6 +65,9 @@
 //String const
 #define  TK_CODE_STRING 47
 
+//Char const
+#define TK_CODE_CHAR 48
+
 
 
 

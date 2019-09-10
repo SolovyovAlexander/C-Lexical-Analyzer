@@ -1,6 +1,5 @@
+#include <ctype.h>
 #include "scanner.h"
-
-
 
 
 void define_token(char *str) {
@@ -256,6 +255,88 @@ fcf is_operator(const char *ch) {
 
 int linenumber = 1;
 
+int is_escape_secuence_char(char ch) {
+    if (ch == '"') return 1;
+    if (ch == '\'') return 1;
+    if (ch == '?') return 1;
+    if (ch == 'a') return 1;
+    if (ch == 'b') return 1;
+    if (ch == 'f') return 1;
+    if (ch == 'n') return 1;
+    if (ch == 'r') return 1;
+    if (ch == 't') return 1;
+    if (ch == 'v') return 1;
+    return 0;
+}
+
+int is_char_from_a_to_f(char ch) {
+    if (ch == 'a' || ch == 'A') return 1;
+    if (ch == 'b' || ch == 'B') return 1;
+    if (ch == 'c' || ch == 'C') return 1;
+    if (ch == 'd' || ch == 'D') return 1;
+    if (ch == 'e' || ch == 'E') return 1;
+    if (ch == 'f' || ch == 'F') return 1;
+    return 0;
+}
+
+CToken *get_char_token(FILE *fp) {
+    //check char constant
+    char ch = fgetc(fp);
+    CToken *token = malloc(sizeof(CToken));
+    token->code = TK_CODE_CHAR;
+    int length = 0;
+    char *src;
+    //escape sequence
+    if (ch == '\\') {
+        src = malloc((++length) * sizeof(char));
+        src[length - 1] = ch;
+        ch = fgetc(fp);
+        if (isdigit(ch) && ch != '8' && ch != '9') {
+            src = realloc(src, (++length) * sizeof(char));
+            src[length - 1] = ch;
+
+            ch = fgetc(fp);
+            if (isdigit(ch) && ch != '8' && ch != '9') {
+                src = realloc(src, (++length) * sizeof(char));
+                src[length - 1] = ch;
+
+                ch = fgetc(fp);
+                if (isdigit(ch) && ch != '8' && ch != '9') {
+                    src = realloc(src, (++length) * sizeof(char));
+                    src[length - 1] = ch;
+                    ch = fgetc(fp);
+                }
+            }
+        } else if (is_escape_secuence_char(ch)) {
+            src = realloc(src, (++length) * sizeof(char));
+            src[length - 1] = ch;
+            ch = fgetc(fp);
+        } else if (ch == 'x') {
+            src = realloc(src, (++length) * sizeof(char));
+            src[length - 1] = ch;
+            ch = fgetc(fp);
+            while (isdigit(ch) || is_char_from_a_to_f(ch)) {
+                src = realloc(src, (++length) * sizeof(char));
+                src[length - 1] = ch;
+                ch = fgetc(fp);
+            }
+        }
+    } else {
+        src = malloc((++length) * sizeof(char));
+        src[length - 1] = ch;
+        ch = fgetc(fp);
+    }
+    if (ch != '\'') {
+        src = realloc(src, (++length) * sizeof(char));
+        src[length - 1] = ch;
+        fprintf(stderr, "Multiple SYMBOLS in character: %s\n", src);
+        exit(-1);
+    }
+    token->source = src;
+    return token;
+
+}
+
 CToken *get_next_token(FILE *fp) {
 
     char ch;
@@ -282,21 +363,21 @@ CToken *get_next_token(FILE *fp) {
         }
 
         //check string constant
-        if (ch == '"' ) {
+        if (ch == '"') {
             int str_length = 0;
             ch = fgetc(fp);
             while (ch != '"') {
                 str_length++;
-                if(ch == EOF){
+                if (ch == EOF) {
                     printf("Pls close string, line = %d", linenumber);
                     exit(1);
                 }
                 ch = fgetc(fp);
-                if(ch == '"'){
+                if (ch == '"') {
                     fseek(fp, -3, SEEK_CUR);
                     char ch1 = fgetc(fp);
                     char ch2 = fgetc(fp);
-                    if (ch1 != '\\' && ch2 == '\\'){
+                    if (ch1 != '\\' && ch2 == '\\') {
                         fgetc(fp);
                         ch = fgetc(fp);
                         str_length++;
@@ -304,17 +385,17 @@ CToken *get_next_token(FILE *fp) {
                     }
                 }
             }
-            char *str_const = malloc((str_length+1) * sizeof(char));
+            char *str_const = malloc((str_length + 1) * sizeof(char));
             fseek(fp, -str_length, SEEK_CUR);
 
-            for (int i = 0; i <str_length ; ++i) {
-                *(str_const+i) = fgetc(fp);
+            for (int i = 0; i < str_length; ++i) {
+                *(str_const + i) = fgetc(fp);
             }
-            token2->source = malloc((str_length+1) * sizeof(char));
+            token2->source = malloc((str_length + 1) * sizeof(char));
 
             // copy string to token
-            for (int j = 0; j <str_length ; ++j) {
-                *(token2->source + j) = *(str_const+j);
+            for (int j = 0; j < str_length; ++j) {
+                *(token2->source + j) = *(str_const + j);
             }
             token2->code = TK_CODE_STRING;
             token2->span_line = linenumber;
@@ -326,13 +407,8 @@ CToken *get_next_token(FILE *fp) {
             return token2;
         }
 
-
-        //check char constant
-        if (ch == '\''){
-            ch = fgetc(fp);
-            while(ch != '\''){
-                
-            }
+        if (ch == '\'') {
+            return get_char_token(fp);
         }
 
         // detection of operators
