@@ -2,9 +2,6 @@
 #include "scanner.h"
 
 
-
-
-
 int is_begin_of_identificator(const char ch) {
     return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_');
 }
@@ -389,6 +386,80 @@ CToken *get_char_token(FILE *fp) {
 
 }
 
+CToken *get_next_value(FILE *fp, char start) {
+    CToken *token = malloc(sizeof(CToken));
+    int length = 0;
+    char *src = malloc((++length) * sizeof(char));
+    char ch;
+    src[length - 1] = start;
+    if (start == '0') {
+        ch = fgetc(fp);
+        if (ch == 'x' || ch == 'X') {
+            src = realloc(src, (++length) * sizeof(char));
+            src[length - 1] = ch;
+            ch = fgetc(fp);
+            if (isdigit(ch) || is_char_from_a_to_f(ch)) {
+                while (isdigit(ch) || is_char_from_a_to_f(ch)) {
+                    src = realloc(src, (++length) * sizeof(char));
+                    src[length - 1] = ch;
+                    ch = fgetc(fp);
+                }
+            } else {
+                src = realloc(src, (++length) * sizeof(char));
+                src[length - 1] = ch;
+                fprintf(stderr, "No value after '0x' in: %s\n", src);
+                exit(-1);
+            }
+
+        } else {
+            while (isdigit(ch) && ch != 8 && ch != 9 ) {
+                src = realloc(src, (++length) * sizeof(char));
+                src[length - 1] = ch;
+                ch = fgetc(fp);
+            }
+        }
+    } else if (isdigit(start)) {
+        ch = fgetc(fp);
+        while (isdigit(ch)) {
+            src = realloc(src, (++length) * sizeof(char));
+            src[length - 1] = ch;
+            ch = fgetc(fp);
+        }
+    } else {
+        fprintf(stderr, "Error in int calue checker [passed not correct starting char]: %s\n", src);
+        exit(-1);
+    }
+
+    if (ch == 'l' || ch == 'L') {
+        src = realloc(src, (++length) * sizeof(char));
+        src[length - 1] = ch;
+        ch = fgetc(fp);
+        if (ch == 'u' || ch == 'U') {
+            src = realloc(src, (++length) * sizeof(char));
+            src[length - 1] = ch;
+        } else {
+            //конец, взял лишний чар
+            fseek(fp, -1, SEEK_CUR);
+        }
+    } else if (ch == 'u' || ch == 'U') {
+        src = realloc(src, (++length) * sizeof(char));
+        src[length - 1] = ch;
+        ch = fgetc(fp);
+        if (ch == 'l' || ch == 'L') {
+            src = realloc(src, (++length) * sizeof(char));
+            src[length - 1] = ch;
+        } else {
+            fseek(fp, -1, SEEK_CUR);
+        }
+    } else {
+        //конец, взял лишний чар
+        fseek(fp, -1, SEEK_CUR);
+    }
+    token->code = TK_CODE_INT;
+    token->source = src;
+    return token;
+}
+
 CToken* get_operator_token(FILE* fp, char ch){
     CToken *token2 = malloc(sizeof(CToken));
     token2->code = -1;
@@ -449,6 +520,10 @@ CToken *get_next_token(FILE *fp) {
 
         if (ch == '\'') {
             return get_char_token(fp);
+        }
+
+        if (isdigit(ch)) {
+            return get_next_value(fp, ch);
         }
 
         // detection of operators

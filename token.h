@@ -68,6 +68,9 @@
 //Char const
 #define TK_CODE_CHAR 48
 
+//Integer token
+#define TK_CODE_INT 49
+
 
 
 
