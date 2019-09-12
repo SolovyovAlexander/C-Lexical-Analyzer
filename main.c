@@ -19,7 +19,8 @@ int main() {
         exit(EXIT_FAILURE);
     }
     int i =0;
-    while (i<10000) {
+    CToken* token;
+    while (i<10000 ) {
 
         get_next_token(fp);
 
@@ -28,6 +29,6 @@ int main() {
     }
 
 
-
+    fclose(fp);
     return 0;
 }

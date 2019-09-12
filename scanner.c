@@ -2,6 +2,8 @@
 #include "scanner.h"
 
 
+
+
 int is_begin_of_identificator(const char ch) {
     return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_');
 }
@@ -21,7 +23,6 @@ int is_keyword(char *str) {
     return 0;
 
 }
-
 
 
 fcf is_operator(const char *ch) {
@@ -279,7 +280,7 @@ int is_char_from_a_to_f(char ch) {
 }
 
 
-CToken* get_string_token(FILE* fp){
+CToken *get_string_token(FILE *fp) {
     int str_length = 0;
     char ch = fgetc(fp);
     CToken *token2 = malloc(sizeof(CToken));
@@ -412,7 +413,7 @@ CToken *get_next_value(FILE *fp, char start) {
             }
 
         } else {
-            while (isdigit(ch) && ch != 8 && ch != 9 ) {
+            while (isdigit(ch) && ch != 8 && ch != 9) {
                 src = realloc(src, (++length) * sizeof(char));
                 src[length - 1] = ch;
                 ch = fgetc(fp);
@@ -457,10 +458,14 @@ CToken *get_next_value(FILE *fp, char start) {
     }
     token->code = TK_CODE_INT;
     token->source = src;
+    printf("%s\n",token->source);
     return token;
 }
 
-CToken* get_operator_token(FILE* fp, char ch){
+CToken *get_operator_token(FILE *fp, char ch) {
+    char operators[46][3] = {"!", "%", "^", "&", "*", "-", "+", "=", "|", ".", "<", ">", "/", "?", "~", "+=", "-=", "*=",
+                             "/=", "%=", "<=", ">=", "&=", "^=", "|=", "++", "--", "<<", ">>", "==", "!=", "&&", "||",
+                             "-->", "<<=", ">>=", "(", ")", "[", "]", "{", "}", ",", ";", ":", "..."};
     CToken *token2 = malloc(sizeof(CToken));
     token2->code = -1;
     char *op_str = malloc(3 * sizeof(char));
@@ -468,8 +473,6 @@ CToken* get_operator_token(FILE* fp, char ch){
     *(op_str + 1) = fgetc(fp);
     *(op_str + 2) = fgetc(fp);
     fcf operat = is_operator(op_str);
-
-
     if (operat.token_code > -1) {
         if (operat.length == 1) {
             fseek(fp, -2, SEEK_CUR);
@@ -480,8 +483,8 @@ CToken* get_operator_token(FILE* fp, char ch){
         } else {
             token2->code = operat.token_code;
         }
-        printf("%d\n", token2->code);
-
+        token2->source = operators[token2->code];
+        printf("%s\n", token2->source);
         return token2;
     }
     fseek(fp, -2, SEEK_CUR);
@@ -492,7 +495,7 @@ CToken *get_next_token(FILE *fp) {
 
     char ch;
 
-    CToken *token2 = malloc(sizeof(CToken));
+    CToken *token2;
 
     while ((ch = fgetc(fp)) != EOF) {
         if (ch == '\n') {
@@ -528,7 +531,7 @@ CToken *get_next_token(FILE *fp) {
 
         // detection of operators
         token2 = get_operator_token(fp, ch);
-        if(token2->code > -1){
+        if (token2->code > -1) {
             return token2;
         }
 
@@ -542,7 +545,7 @@ CToken *get_next_token(FILE *fp) {
 
 
     fclose(fp);
-    return 0;
+    return token2;
 }
 
 
