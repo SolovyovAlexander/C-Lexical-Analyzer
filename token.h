@@ -60,16 +60,47 @@
 #define TK_CODE_ELLIPSIS 45 // '...'
 
 //KEYWORD
-#define TK_CODE_KEYWORD 46
+#define TK_CODE_AUTO 46 // 'auto'
+#define TK_CODE_BREAK 47 // 'break'
+#define TK_CODE_CASE 48 // 'case'
+#define TK_CODE_CHAR 49 // 'char'
+#define TK_CODE_CONST 50 // 'const'
+#define TK_CODE_CONTINUE 51 // 'continue'
+#define TK_CODE_DEFAULT 52 // 'default'
+#define TK_CODE_DO 53 // 'do'
+#define TK_CODE_DOUBLE 54 // 'double'
+#define TK_CODE_ELSE 55 // 'else'
+#define TK_CODE_ENUM 56 // 'enum'
+#define TK_CODE_EXTERN 57 // 'extern'
+#define TK_CODE_FLOAT 58 // 'float'
+#define TK_CODE_FOR 59 // 'for'
+#define TK_CODE_GOTO 60 // 'goto'
+#define TK_CODE_IF 61 // 'if'
+#define TK_CODE_INT 62 // 'int'
+#define TK_CODE_LONG 63 // 'long'
+#define TK_CODE_REGISTER 64 // 'register'
+#define TK_CODE_RETURN 65 // 'return'
+#define TK_CODE_SHORT 66 // 'short'
+#define TK_CODE_SIGNED 67 // 'signed'
+#define TK_CODE_SIZEOF 68 // 'sizeof'
+#define TK_CODE_STATIC 69 // 'static'
+#define TK_CODE_STRUCT 70 // 'struct'
+#define TK_CODE_SWITCH 71 // 'switch'
+#define TK_CODE_TYPEDEF 72 // 'typedef'
+#define TK_CODE_UNION 73 // 'union'
+#define TK_CODE_UNSIGNED 74 // 'unsigned'
+#define TK_CODE_VOID 75 // 'void'
+#define TK_CODE_VOLATILE 76 // 'volatile'
+#define TK_CODE_WHILE 77 // 'while'
 
 //String const
-#define  TK_CODE_STRING 47
+#define  TK_CODE_STRING 78
 
 //Char const
-#define TK_CODE_CHAR 48
+#define TK_CODE_CHAR 79
 
 //Integer token
-#define TK_CODE_INT 49
+#define TK_CODE_INT 80
 
 
 

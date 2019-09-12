@@ -20,7 +20,6 @@ int is_keyword_one(char *str) {
 
     return 0;
 }
-
 fcf is_keyword(char *str) {
     fcf a;
 
@@ -31,131 +30,131 @@ fcf is_keyword(char *str) {
                             "unsigned", "void", "volatile", "while"};
 
     if (str == "auto") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_AUTO;
         a.length = 4;
         return a;
     } else if (str == "break") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_BREAK;
         a.length = 5;
         return a;
     } else if (str == "case") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_CASE;
         a.length = 4;
         return a;
     } else if (str == "char") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_CHAR;
         a.length = 4;
         return a;
     } else if (str == "const") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_CONST;
         a.length = 5;
         return a;
     } else if (str == "continue") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_CONTINUE;
         a.length = 8;
         return a;
     } else if (str == "default") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_DEFAULT;
         a.length = 7;
         return a;
     } else if (str == "do") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_DO;
         a.length = 2;
         return a;
     } else if (str == "double") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_DOUBLE;
         a.length = 6;
         return a;
     } else if (str == "else") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_ELSE;
         a.length = 4;
         return a;
     } else if (str == "enum") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_ENUM;
         a.length = 4;
         return a;
     } else if (str == "extern") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_EXTERN;
         a.length = 6;
         return a;
     } else if (str == "float") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_FLOAT;
         a.length = 5;
         return a;
     } else if (str == "for") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_FOR;
         a.length = 3;
         return a;
     } else if (str == "goto") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_GOTO;
         a.length = 4;
         return a;
     } else if (str == "if") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_IF;
         a.length = 2;
         return a;
     } else if (str == "int") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_INT;
         a.length = 3;
         return a;
     } else if (str == "long") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_LONG;
         a.length = 4;
         return a;
     } else if (str == "register") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_REGISTER;
         a.length = 8;
         return a;
     } else if (str == "return") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_RETURN;
         a.length = 6;
         return a;
     } else if (str == "short") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_SHORT;
         a.length = 5;
         return a;
     } else if (str == "signed") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_SIGNED;
         a.length = 6;
         return a;
     } else if (str == "sizeof") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_SIZEOF;
         a.length = 6;
         return a;
     } else if (str == "static") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_STATIC;
         a.length = 6;
         return a;
     } else if (str == "struct") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_STRUCT;
         a.length = 6;
         return a;
     } else if (str == "switch") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_SWITCH;
         a.length = 6;
         return a;
     } else if (str == "typedef") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_TYPEDEF;
         a.length = 7;
         return a;
     } else if (str == "union") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_UNION;
         a.length = 5;
         return a;
     } else if (str == "unsigned") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_UNSIGNED;
         a.length = 8;
         return a;
     } else if (str == "void") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_VOID;
         a.length = 4;
         return a;
     } else if (str == "volatile") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_VOLATILE;
         a.length = 8;
         return a;
     } else if (str == "while") {
-        a.token_code = TK_CODE_KEYWORD;
+        a.token_code = TK_CODE_WHILE;
         a.length = 5;
         return a;
     }
