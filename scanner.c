@@ -22,7 +22,19 @@ int is_keyword(char *str) {
 
 }
 
-
+int is_operator_one(char ch){
+    int a = 0;
+    char operators[46][3] = {"!", "%", "^", "&", "*", "-", "+", "=", "|", ".", "<", ">", "/", "?", "~", "+=", "-=",
+                             "*=",
+                             "/=", "%=", "<=", ">=", "&=", "^=", "|=", "++", "--", "<<", ">>", "==", "!=", "&&", "||",
+                             "-->", "<<=", ">>=", "(", ")", "[", "]", "{", "}", ",", ";", ":", "..."};
+    for (int i = 0; i <46 ; ++i) {
+        if(ch == operators[i][0]){
+            a = 1;
+        }
+    }
+    return a;
+}
 fcf is_operator(const char *ch) {
     fcf a;
 
@@ -280,7 +292,7 @@ int is_char_from_a_to_f(char ch) {
 
 CToken *get_string_token(FILE *fp) {
     int str_length = 0;
-    char ch = (char) fgetc(fp);
+    char ch = fgetc(fp);
     CToken *token2 = malloc(sizeof(CToken));
     token2->code = TK_CODE_STRING;
     while (ch != '"') {
@@ -289,14 +301,14 @@ CToken *get_string_token(FILE *fp) {
             printf("Pls close string, line = %d", linenumber);
             exit(1);
         }
-        ch = (char) fgetc(fp);
+        ch = fgetc(fp);
         if (ch == '"') {
             fseek(fp, -3, SEEK_CUR);
-            char ch1 = (char) fgetc(fp);
-            char ch2 = (char) fgetc(fp);
+            char ch1 = fgetc(fp);
+            char ch2 = fgetc(fp);
             if (ch1 != '\\' && ch2 == '\\') {
                 fgetc(fp);
-                ch = (char) fgetc(fp);
+                ch = fgetc(fp);
                 str_length++;
                 fseek(fp, -1, SEEK_CUR);
             }
@@ -306,7 +318,7 @@ CToken *get_string_token(FILE *fp) {
     fseek(fp, -str_length, SEEK_CUR);
 
     for (int i = 0; i < str_length; ++i) {
-        *(str_const + i) = (char) fgetc(fp);
+        *(str_const + i) = fgetc(fp);
     }
     token2->source = malloc((str_length + 1) * sizeof(char));
 
@@ -326,7 +338,7 @@ CToken *get_string_token(FILE *fp) {
 
 CToken *get_char_token(FILE *fp) {
     //check char constant
-    char ch = (char) fgetc(fp);
+    char ch = fgetc(fp);
     CToken *token = malloc(sizeof(CToken));
     token->code = TK_CODE_CHAR;
     int length = 0;
@@ -335,41 +347,41 @@ CToken *get_char_token(FILE *fp) {
     if (ch == '\\') {
         src = malloc((++length) * sizeof(char));
         src[length - 1] = ch;
-        ch = (char) fgetc(fp);
+        ch = fgetc(fp);
         if (isdigit(ch) && ch != '8' && ch != '9') {
             src = realloc(src, (++length) * sizeof(char));
             src[length - 1] = ch;
 
-            ch = (char) fgetc(fp);
+            ch = fgetc(fp);
             if (isdigit(ch) && ch != '8' && ch != '9') {
                 src = realloc(src, (++length) * sizeof(char));
                 src[length - 1] = ch;
 
-                ch = (char) fgetc(fp);
+                ch = fgetc(fp);
                 if (isdigit(ch) && ch != '8' && ch != '9') {
                     src = realloc(src, (++length) * sizeof(char));
                     src[length - 1] = ch;
-                    ch = (char) fgetc(fp);
+                    ch = fgetc(fp);
                 }
             }
         } else if (is_escape_secuence_char(ch)) {
             src = realloc(src, (++length) * sizeof(char));
             src[length - 1] = ch;
-            ch = (char) fgetc(fp);
+            ch = fgetc(fp);
         } else if (ch == 'x') {
             src = realloc(src, (++length) * sizeof(char));
             src[length - 1] = ch;
-            ch = (char) fgetc(fp);
+            ch = fgetc(fp);
             while (isdigit(ch) || is_char_from_a_to_f(ch)) {
                 src = realloc(src, (++length) * sizeof(char));
                 src[length - 1] = ch;
-                ch = (char) fgetc(fp);
+                ch = fgetc(fp);
             }
         }
     } else {
         src = malloc((++length) * sizeof(char));
         src[length - 1] = ch;
-        ch = (char) fgetc(fp);
+        ch = fgetc(fp);
     }
     if (ch != '\'') {
         src = realloc(src, (++length) * sizeof(char));
@@ -392,16 +404,16 @@ CToken *get_next_value(FILE *fp, char start) {
     char ch;
     src[length - 1] = start;
     if (start == '0') {
-        ch = (char) fgetc(fp);
+        ch = fgetc(fp);
         if (ch == 'x' || ch == 'X') {
             src = realloc(src, (++length) * sizeof(char));
             src[length - 1] = ch;
-            ch = (char) fgetc(fp);
+            ch = fgetc(fp);
             if (isdigit(ch) || is_char_from_a_to_f(ch)) {
                 while (isdigit(ch) || is_char_from_a_to_f(ch)) {
                     src = realloc(src, (++length) * sizeof(char));
                     src[length - 1] = ch;
-                    ch = (char) fgetc(fp);
+                    ch = fgetc(fp);
                 }
             } else {
                 src = realloc(src, (++length) * sizeof(char));
@@ -414,15 +426,15 @@ CToken *get_next_value(FILE *fp, char start) {
             while (isdigit(ch) && ch != 8 && ch != 9) {
                 src = realloc(src, (++length) * sizeof(char));
                 src[length - 1] = ch;
-                ch = (char) fgetc(fp);
+                ch = fgetc(fp);
             }
         }
     } else if (isdigit(start)) {
-        ch = (char) fgetc(fp);
+        ch = fgetc(fp);
         while (isdigit(ch)) {
             src = realloc(src, (++length) * sizeof(char));
             src[length - 1] = ch;
-            ch = (char) fgetc(fp);
+            ch = fgetc(fp);
         }
     } else {
         fprintf(stderr, "Error in int value checker [passed not correct starting char]: %s\n", src);
@@ -432,7 +444,7 @@ CToken *get_next_value(FILE *fp, char start) {
     if (ch == 'l' || ch == 'L') {
         src = realloc(src, (++length) * sizeof(char));
         src[length - 1] = ch;
-        ch = (char) fgetc(fp);
+        ch = fgetc(fp);
         if (ch == 'u' || ch == 'U') {
             src = realloc(src, (++length) * sizeof(char));
             src[length - 1] = ch;
@@ -447,7 +459,7 @@ CToken *get_next_value(FILE *fp, char start) {
     } else if (ch == 'u' || ch == 'U') {
         src = realloc(src, (++length) * sizeof(char));
         src[length - 1] = ch;
-        ch = (char) fgetc(fp);
+        ch = fgetc(fp);
         if (ch == 'l' || ch == 'L') {
             src = realloc(src, (++length) * sizeof(char));
             src[length - 1] = ch;
@@ -475,6 +487,7 @@ CToken *get_next_value(FILE *fp, char start) {
 }
 
 CToken *get_operator_token(FILE *fp, char ch) {
+    int flag = 0;
     char operators[46][3] = {"!", "%", "^", "&", "*", "-", "+", "=", "|", ".", "<", ">", "/", "?", "~", "+=", "-=",
                              "*=",
                              "/=", "%=", "<=", ">=", "&=", "^=", "|=", "++", "--", "<<", ">>", "==", "!=", "&&", "||",
@@ -482,10 +495,19 @@ CToken *get_operator_token(FILE *fp, char ch) {
     CToken *token2 = malloc(sizeof(CToken));
     token2->code = -1;
     char *op_str = malloc(3 * sizeof(char));
-    *op_str = ch;
-    *(op_str + 1) = (char) fgetc(fp);
-    *(op_str + 2) = (char) fgetc(fp);
-    fcf operat = is_operator(op_str);
+    char kek[3];
+    kek[0] = ch;
+    kek[1] = fgetc(fp);
+    kek[2] = fgetc(fp);
+    if (kek[1] == EOF ){
+        flag = 1;
+        fseek(fp, 0, SEEK_END);
+    } else if (kek[2] == EOF ){
+        flag = 1;
+        fseek(fp, -1, SEEK_END);
+    }
+
+    fcf operat = is_operator(kek);
     if (operat.token_code > -1) {
         if (operat.length == 1) {
             fseek(fp, -2, SEEK_CUR);
@@ -500,7 +522,10 @@ CToken *get_operator_token(FILE *fp, char ch) {
         printf("%s\n", token2->source);
         return token2;
     }
-    fseek(fp, -2, SEEK_CUR);
+    if(!flag){
+        fseek(fp, -2, SEEK_CUR);
+    }
+
     return token2;
 }
 
@@ -509,31 +534,32 @@ CToken *get_next_token(FILE *fp) {
     char ch;
 
     CToken *token2;
-
-    while ((ch = (char) fgetc(fp)) != EOF) {
+    ch = (char)fgetc(fp);
+    while (ch != EOF) {
         if (ch == '\n') {
             linenumber++;
-            ch = (char) fgetc(fp);
+            ch = fgetc(fp);
         }
         //avoid comments
         if (ch == '/') {
             if (fgetc(fp) == '/') {
-                while (ch != '\n') { ch = (char) fgetc(fp); }
+                while (ch != '\n') { ch = fgetc(fp); }
                 linenumber++;
-                ch = (char) fgetc(fp);
+                ch = fgetc(fp);
             } else
                 fseek(fp, -1, SEEK_CUR);
         }
 
         //avoid preprocessing
         if (ch == '#') {
-            while (ch != '\n') { ch = (char) fgetc(fp); }
+            while (ch != '\n') { ch = fgetc(fp); }
             linenumber++;
-            ch = (char) fgetc(fp);
+            ch = fgetc(fp);
         }
 
         //check string constant
         if (ch == '"') {
+
             return get_string_token(fp);
         }
 
@@ -546,20 +572,23 @@ CToken *get_next_token(FILE *fp) {
         }
 
         // detection of operators
-        token2 = get_operator_token(fp, ch);
-        if (token2->code > -1) {
-            return token2;
+        if (is_operator_one(ch)){
+            token2 = get_operator_token(fp, ch);
+            if (token2->code > -1) {
+                return token2;
+            }
         }
+
 
 
         //identificator
         if (is_begin_of_identificator(ch)) {
 
         }
+        ch = fgetc(fp);
 
     }
 
-    fclose(fp);
     return token2;
 }
 

@@ -20,6 +20,7 @@ int main() {
     }
     int i =0;
     CToken* token;
+
     while (i<10000 ) {
 
         get_next_token(fp);
