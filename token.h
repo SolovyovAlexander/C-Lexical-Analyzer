@@ -59,7 +59,7 @@
 #define TK_CODE_COLON 44 // ':'
 #define TK_CODE_ELLIPSIS 45 // '...'
 
-//KEYWORD
+//KEYWORDS
 #define TK_CODE_AUTO 46 // 'auto'
 #define TK_CODE_BREAK 47 // 'break'
 #define TK_CODE_CASE 48 // 'case'
@@ -96,13 +96,8 @@
 //String const
 #define  TK_CODE_STRING 78
 
-//Char const
-#define TK_CODE_CHAR 79
-
-//Integer token
-#define TK_CODE_INT 80
-
-
+//IDENTIFIERS
+#define  TK_CODE_IDENTIFIER 79
 
 
 struct CToken {
