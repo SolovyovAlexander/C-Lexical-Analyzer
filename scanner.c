@@ -3,261 +3,6 @@
 int linenumber = 1;
 
 
-
-
-CToken *get_identificator_token(FILE *fp, char ch) {
-    int str_length = 0;
-    CToken *token2 = malloc(sizeof(CToken));
-    token2->code = TK_CODE_IDENTIFICATOR;
-    while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_' || (ch >= '0' && ch <= '9')) {
-        str_length++;
-        ch = fgetc(fp);
-    }
-
-    if (ch == EOF)
-        fseek(fp, -str_length, SEEK_END);
-    else
-        fseek(fp, -str_length-1, SEEK_CUR);
-
-    // copy string to token
-    token2->source = malloc((str_length + 1) * sizeof(char));
-    for (int i = 0; i < str_length; ++i) {
-        ch = fgetc(fp);
-        *(token2->source + i) = ch;
-
-
-    }
-
-    token2->code = TK_CODE_IDENTIFICATOR;
-    token2->span_line = linenumber;
-    *(token2->source + str_length) = '\0';
-    printf("%s\n", token2->source);
-
-    return token2;
-}
-
-
-
-fcf is_keyword(const char *str) {
-    fcf a;
-
-    char keywords[32][9] = {"auto", "break", "case", "char", "const", "continue", "default",
-                            "do", "double", "else", "enum", "extern", "float", "for", "goto",
-                            "if", "int", "long", "register", "return", "short", "signed",
-                            "sizeof", "static", "struct", "switch", "typedef", "union",
-                            "unsigned", "void", "volatile", "while"};
-
-    if (*str == 'a' && *(str + 1) == 'u' && *(str + 2) == 't' && *(str + 3) == 'o') {
-        a.token_code = TK_CODE_AUTO;
-        a.length = 4;
-        return a;
-    } else if (*str == 'b' && *(str + 1) == 'r' && *(str + 2) == 'e' && *(str + 3) == 'a' && *(str + 4) == 'k') {
-        a.token_code = TK_CODE_BREAK;
-        a.length = 5;
-        return a;
-    } else if (*str == 'c' && *(str + 1) == 'a' && *(str + 2) == 's' && *(str + 3) == 'e') {
-        a.token_code = TK_CODE_CASE;
-        a.length = 4;
-        return a;
-    } else if (*str == 'c' && *(str + 1) == 'h' && *(str + 2) == 'a' && *(str + 3) == 'r') {
-        a.token_code = TK_CODE_CHAR;
-        a.length = 4;
-        return a;
-    } else if (*str == 'c' && *(str + 1) == 'o' && *(str + 2) == 'n' && *(str + 3) == 's' && *(str + 4) == 't') {
-        a.token_code = TK_CODE_CONST;
-        a.length = 5;
-        return a;
-    } else if (*str == 'c' && *(str + 1) == 'o' && *(str + 2) == 'n' && *(str + 3) == 't' && *(str + 4) == 'i' &&
-               *(str + 5) == 'n' && *(str + 6) == 'u' && *(str + 7) == 'e') {
-        a.token_code = TK_CODE_CONTINUE;
-        a.length = 8;
-        return a;
-    } else if (*str == 'd' && *(str + 1) == 'e' && *(str + 2) == 'f' && *(str + 3) == 'a' && *(str + 4) == 'u' &&
-               *(str + 5) == 'l' && *(str + 6) == 't') {
-        a.token_code = TK_CODE_DEFAULT;
-        a.length = 7;
-        return a;
-    } else if (*str == 'd' && *(str + 1) == 'o') {
-        a.token_code = TK_CODE_DO;
-        a.length = 2;
-        return a;
-    } else if (*str == 'd' && *(str + 1) == 'o' && *(str + 2) == 'u' && *(str + 3) == 'b' && *(str + 4) == 'l' &&
-               *(str + 5) == 'e') {
-        a.token_code = TK_CODE_DOUBLE;
-        a.length = 6;
-        return a;
-    } else if (*str == 'e' && *(str + 1) == 'l' && *(str + 2) == 's' && *(str + 3) == 'e') {
-        a.token_code = TK_CODE_ELSE;
-        a.length = 4;
-        return a;
-    } else if (*str == 'e' && *(str + 1) == 'n' && *(str + 2) == 'u' && *(str + 3) == 'm') {
-        a.token_code = TK_CODE_ENUM;
-        a.length = 4;
-        return a;
-    } else if (*str == 'e' && *(str + 1) == 'x' && *(str + 2) == 't' && *(str + 3) == 'e' && *(str + 4) == 'r' &&
-               *(str + 5) == 'n') {
-        a.token_code = TK_CODE_EXTERN;
-        a.length = 6;
-        return a;
-    } else if (*str == 'f' && *(str + 1) == 'l' && *(str + 2) == 'o' && *(str + 3) == 'a' && *(str + 4) == 't') {
-        a.token_code = TK_CODE_FLOAT;
-        a.length = 5;
-        return a;
-    } else if (*str == 'f' && *(str + 1) == 'o' && *(str + 2) == 'r') {
-        a.token_code = TK_CODE_FOR;
-        a.length = 3;
-        return a;
-    } else if (*str == 'g' && *(str + 1) == 'o' && *(str + 2) == 't' && *(str + 3) == 'o') {
-        a.token_code = TK_CODE_GOTO;
-        a.length = 4;
-        return a;
-    } else if (*str == 'i' && *(str + 1) == 'f') {
-        a.token_code = TK_CODE_IF;
-        a.length = 2;
-        return a;
-    } else if (*str == 'i' && *(str + 1) == 'n' && *(str + 2) == 't') {
-        a.token_code = TK_CODE_INT;
-        a.length = 3;
-        return a;
-    } else if (*str == 'l' && *(str + 1) == 'o' && *(str + 2) == 'n' && *(str + 3) == 'g') {
-        a.token_code = TK_CODE_LONG;
-        a.length = 4;
-        return a;
-    } else if (*str == 'r' && *(str + 1) == 'e' && *(str + 2) == 'g' && *(str + 3) == 'i' && *(str + 4) == 's' &&
-               *(str + 5) == 't' && *(str + 6) == 'e' && *(str + 7) == 'r') {
-        a.token_code = TK_CODE_REGISTER;
-        a.length = 8;
-        return a;
-
-    } else if (*str == 'r' && *(str + 1) == 'e' && *(str + 2) == 't' && *(str + 3) == 'u' && *(str + 4) == 'r' &&
-               *(str + 5) == 'n') {
-        a.token_code = TK_CODE_RETURN;
-        a.length = 6;
-        return a;
-    } else if (*str == 's' && *(str + 1) == 'h' && *(str + 2) == 'o' && *(str + 3) == 'r' && *(str + 4) == 't') {
-        a.token_code = TK_CODE_SHORT;
-        a.length = 5;
-        return a;
-    } else if (*str == 's' && *(str + 1) == 'i' && *(str + 2) == 'g' && *(str + 3) == 'n' && *(str + 4) == 'e' &&
-               *(str + 5) == 'd') {
-        a.token_code = TK_CODE_SIGNED;
-        a.length = 6;
-        return a;
-    } else if (*str == 's' && *(str + 1) == 'i' && *(str + 2) == 'z' && *(str + 3) == 'e' && *(str + 4) == 'o' &&
-               *(str + 1) == 'f') {
-        a.token_code = TK_CODE_SIZEOF;
-        a.length = 6;
-        return a;
-    } else if (*str == 's' && *(str + 1) == 't' && *(str + 2) == 'a' && *(str + 3) == 't' && *(str + 4) == 'i' &&
-               *(str + 1) == 'c') {
-        a.token_code = TK_CODE_STATIC;
-        a.length = 6;
-        return a;
-    } else if (*str == 's' && *(str + 1) == 't' && *(str + 2) == 'r' && *(str + 3) == 'u' && *(str + 4) == 'c' &&
-               *(str + 1) == 't') {
-        a.token_code = TK_CODE_STRUCT;
-        a.length = 6;
-        return a;
-    } else if (*str == 's' && *(str + 1) == 'w' && *(str + 2) == 'i' && *(str + 3) == 't' && *(str + 4) == 'c' &&
-               *(str + 1) == 'h') {
-        a.token_code = TK_CODE_SWITCH;
-        a.length = 6;
-        return a;
-    } else if (*str == 't' && *(str + 1) == 'y' && *(str + 2) == 'p' && *(str + 3) == 'e' && *(str + 4) == 'd' &&
-               *(str + 5) == 'e' && *(str + 6) == 'f') {
-        a.token_code = TK_CODE_TYPEDEF;
-        a.length = 7;
-        return a;
-    } else if (*str == 'u' && *(str + 1) == 'n' && *(str + 2) == 'i' && *(str + 3) == 'o' && *(str + 4) == 'n') {
-        a.token_code = TK_CODE_UNION;
-        a.length = 5;
-        return a;
-    } else if (*str == 'u' && *(str + 1) == 'n' && *(str + 2) == 's' && *(str + 3) == 'i' && *(str + 4) == 'g' &&
-               *(str + 5) == 'n' && *(str + 6) == 'e' && *(str + 7) == 'd') {
-        a.token_code = TK_CODE_UNSIGNED;
-        a.length = 8;
-        return a;
-    } else if (*str == 'v' && *(str + 1) == 'o' && *(str + 2) == 'i' && *(str + 3) == 'd') {
-        a.token_code = TK_CODE_VOID;
-        a.length = 4;
-        return a;
-    } else if (*str == 'v' && *(str + 1) == 'o' && *(str + 2) == 'l' && *(str + 3) == 'a' && *(str + 4) == 't' &&
-               *(str + 5) == 'i' && *(str + 6) == 'l' && *(str + 7) == 'e') {
-        a.token_code = TK_CODE_VOLATILE;
-        a.length = 8;
-        return a;
-    } else if (*str == 'w' && *(str + 1) == 'h' && *(str + 2) == 'i' && *(str + 3) == 'l' && *(str + 4) == 'e') {
-        a.token_code = TK_CODE_WHILE;
-        a.length = 5;
-        return a;
-    } else {
-        a.token_code = -1;
-        a.length = 0;
-        return a;
-    }
-}
-
-CToken *get_keyword_token(FILE *fp, char ch) {
-    char keywords[32][9] = {"auto", "break", "case", "char", "const", "continue", "default",
-                            "do", "double", "else", "enum", "extern", "float", "for", "goto",
-                            "if", "int", "long", "register", "return", "short", "signed",
-                            "sizeof", "static", "struct", "switch", "typedef", "union",
-                            "unsigned", "void", "volatile", "while"};
-
-    int str_length = 0;
-    CToken *token2 = malloc(sizeof(CToken));
-    while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-        str_length++;
-        ch = fgetc(fp);
-    }
-
-    if (ch == EOF)
-        fseek(fp, -str_length, SEEK_END);
-    else
-        fseek(fp, -str_length-1, SEEK_CUR);
-
-    // copy string to token
-    token2->source = malloc((str_length + 1) * sizeof(char));
-    for (int i = 0; i < str_length; ++i) {
-        ch = fgetc(fp);
-        *(token2->source + i) = ch;
-    }
-    *(token2->source + str_length) = '\0';
-    fcf keyword = is_keyword(token2->source);
-    if (keyword.token_code > -1) {
-
-        printf("KEY WORD!!!!!!! %s\n", token2->source);
-        token2->span_line = linenumber;
-        return token2;
-    }
-
-    fseek(fp, -str_length-1, SEEK_CUR);
-    fgetc(fp);
-
-    return token2;
-}
-
-int is_begin_of_identificator(const char ch) {
-    return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_');
-}
-
-int is_begin_of_keyword(const char ch) {
-    return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'));
-}
-
-int is_operator_one(char ch){
-    int a = 0;
-    char operators[46][3] = {"!", "%", "^", "&", "*", "-", "+", "=", "|", ".", "<", ">", "/", "?", "~", "+=", "-=",
-                             "*=",
-                             "/=", "%=", "<=", ">=", "&=", "^=", "|=", "++", "--", "<<", ">>", "==", "!=", "&&", "||",
-                             "-->", "<<=", ">>=", "(", ")", "[", "]", "{", "}", ",", ";", ":", "..."};
-    for (int i = 0; i <46 ; ++i) {
-        if(ch == operators[i][0]){
-            a = 1;
-        }
-    }
-    return a;
-}
 fcf is_operator(const char *ch) {
     fcf a;
 
@@ -484,6 +229,261 @@ fcf is_operator(const char *ch) {
     a.length = 0;
     return a;
 }
+
+CToken *get_identificator_token(FILE *fp, char ch) {
+    int str_length = 0;
+    CToken *token2 = malloc(sizeof(CToken));
+    token2->code = TK_CODE_IDENTIFICATOR;
+    while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_' || (ch >= '0' && ch <= '9')) {
+        str_length++;
+        ch = fgetc(fp);
+    }
+
+    if (ch == EOF)
+        fseek(fp, -str_length, SEEK_END);
+    else
+        fseek(fp, -str_length-1, SEEK_CUR);
+
+    // copy string to token
+    token2->source = malloc((str_length + 1) * sizeof(char));
+    for (int i = 0; i < str_length; ++i) {
+        ch = fgetc(fp);
+        *(token2->source + i) = ch;
+
+
+    }
+
+    token2->code = TK_CODE_IDENTIFICATOR;
+    token2->span_line = linenumber;
+    *(token2->source + str_length) = '\0';
+    printf("%s\n", token2->source);
+
+    return token2;
+}
+
+
+
+fcf is_keyword(const char *str) {
+    fcf a;
+
+    char keywords[32][9] = {"auto", "break", "case", "char", "const", "continue", "default",
+                            "do", "double", "else", "enum", "extern", "float", "for", "goto",
+                            "if", "int", "long", "register", "return", "short", "signed",
+                            "sizeof", "static", "struct", "switch", "typedef", "union",
+                            "unsigned", "void", "volatile", "while"};
+
+    if (*str == 'a' && *(str + 1) == 'u' && *(str + 2) == 't' && *(str + 3) == 'o') {
+        a.token_code = TK_CODE_AUTO;
+        a.length = 4;
+        return a;
+    } else if (*str == 'b' && *(str + 1) == 'r' && *(str + 2) == 'e' && *(str + 3) == 'a' && *(str + 4) == 'k') {
+        a.token_code = TK_CODE_BREAK;
+        a.length = 5;
+        return a;
+    } else if (*str == 'c' && *(str + 1) == 'a' && *(str + 2) == 's' && *(str + 3) == 'e') {
+        a.token_code = TK_CODE_CASE;
+        a.length = 4;
+        return a;
+    } else if (*str == 'c' && *(str + 1) == 'h' && *(str + 2) == 'a' && *(str + 3) == 'r') {
+        a.token_code = TK_CODE_CHAR;
+        a.length = 4;
+        return a;
+    } else if (*str == 'c' && *(str + 1) == 'o' && *(str + 2) == 'n' && *(str + 3) == 's' && *(str + 4) == 't') {
+        a.token_code = TK_CODE_CONST;
+        a.length = 5;
+        return a;
+    } else if (*str == 'c' && *(str + 1) == 'o' && *(str + 2) == 'n' && *(str + 3) == 't' && *(str + 4) == 'i' &&
+               *(str + 5) == 'n' && *(str + 6) == 'u' && *(str + 7) == 'e') {
+        a.token_code = TK_CODE_CONTINUE;
+        a.length = 8;
+        return a;
+    } else if (*str == 'd' && *(str + 1) == 'e' && *(str + 2) == 'f' && *(str + 3) == 'a' && *(str + 4) == 'u' &&
+               *(str + 5) == 'l' && *(str + 6) == 't') {
+        a.token_code = TK_CODE_DEFAULT;
+        a.length = 7;
+        return a;
+    } else if (*str == 'd' && *(str + 1) == 'o') {
+        a.token_code = TK_CODE_DO;
+        a.length = 2;
+        return a;
+    } else if (*str == 'd' && *(str + 1) == 'o' && *(str + 2) == 'u' && *(str + 3) == 'b' && *(str + 4) == 'l' &&
+               *(str + 5) == 'e') {
+        a.token_code = TK_CODE_DOUBLE;
+        a.length = 6;
+        return a;
+    } else if (*str == 'e' && *(str + 1) == 'l' && *(str + 2) == 's' && *(str + 3) == 'e') {
+        a.token_code = TK_CODE_ELSE;
+        a.length = 4;
+        return a;
+    } else if (*str == 'e' && *(str + 1) == 'n' && *(str + 2) == 'u' && *(str + 3) == 'm') {
+        a.token_code = TK_CODE_ENUM;
+        a.length = 4;
+        return a;
+    } else if (*str == 'e' && *(str + 1) == 'x' && *(str + 2) == 't' && *(str + 3) == 'e' && *(str + 4) == 'r' &&
+               *(str + 5) == 'n') {
+        a.token_code = TK_CODE_EXTERN;
+        a.length = 6;
+        return a;
+    } else if (*str == 'f' && *(str + 1) == 'l' && *(str + 2) == 'o' && *(str + 3) == 'a' && *(str + 4) == 't') {
+        a.token_code = TK_CODE_FLOAT;
+        a.length = 5;
+        return a;
+    } else if (*str == 'f' && *(str + 1) == 'o' && *(str + 2) == 'r') {
+        a.token_code = TK_CODE_FOR;
+        a.length = 3;
+        return a;
+    } else if (*str == 'g' && *(str + 1) == 'o' && *(str + 2) == 't' && *(str + 3) == 'o') {
+        a.token_code = TK_CODE_GOTO;
+        a.length = 4;
+        return a;
+    } else if (*str == 'i' && *(str + 1) == 'f') {
+        a.token_code = TK_CODE_IF;
+        a.length = 2;
+        return a;
+    } else if (*str == 'i' && *(str + 1) == 'n' && *(str + 2) == 't') {
+        a.token_code = TK_CODE_INT;
+        a.length = 3;
+        return a;
+    } else if (*str == 'l' && *(str + 1) == 'o' && *(str + 2) == 'n' && *(str + 3) == 'g') {
+        a.token_code = TK_CODE_LONG;
+        a.length = 4;
+        return a;
+    } else if (*str == 'r' && *(str + 1) == 'e' && *(str + 2) == 'g' && *(str + 3) == 'i' && *(str + 4) == 's' &&
+               *(str + 5) == 't' && *(str + 6) == 'e' && *(str + 7) == 'r') {
+        a.token_code = TK_CODE_REGISTER;
+        a.length = 8;
+        return a;
+
+    } else if (*str == 'r' && *(str + 1) == 'e' && *(str + 2) == 't' && *(str + 3) == 'u' && *(str + 4) == 'r' &&
+               *(str + 5) == 'n') {
+        a.token_code = TK_CODE_RETURN;
+        a.length = 6;
+        return a;
+    } else if (*str == 's' && *(str + 1) == 'h' && *(str + 2) == 'o' && *(str + 3) == 'r' && *(str + 4) == 't') {
+        a.token_code = TK_CODE_SHORT;
+        a.length = 5;
+        return a;
+    } else if (*str == 's' && *(str + 1) == 'i' && *(str + 2) == 'g' && *(str + 3) == 'n' && *(str + 4) == 'e' &&
+               *(str + 5) == 'd') {
+        a.token_code = TK_CODE_SIGNED;
+        a.length = 6;
+        return a;
+    } else if (*str == 's' && *(str + 1) == 'i' && *(str + 2) == 'z' && *(str + 3) == 'e' && *(str + 4) == 'o' &&
+               *(str + 1) == 'f') {
+        a.token_code = TK_CODE_SIZEOF;
+        a.length = 6;
+        return a;
+    } else if (*str == 's' && *(str + 1) == 't' && *(str + 2) == 'a' && *(str + 3) == 't' && *(str + 4) == 'i' &&
+               *(str + 1) == 'c') {
+        a.token_code = TK_CODE_STATIC;
+        a.length = 6;
+        return a;
+    } else if (*str == 's' && *(str + 1) == 't' && *(str + 2) == 'r' && *(str + 3) == 'u' && *(str + 4) == 'c' &&
+               *(str + 1) == 't') {
+        a.token_code = TK_CODE_STRUCT;
+        a.length = 6;
+        return a;
+    } else if (*str == 's' && *(str + 1) == 'w' && *(str + 2) == 'i' && *(str + 3) == 't' && *(str + 4) == 'c' &&
+               *(str + 1) == 'h') {
+        a.token_code = TK_CODE_SWITCH;
+        a.length = 6;
+        return a;
+    } else if (*str == 't' && *(str + 1) == 'y' && *(str + 2) == 'p' && *(str + 3) == 'e' && *(str + 4) == 'd' &&
+               *(str + 5) == 'e' && *(str + 6) == 'f') {
+        a.token_code = TK_CODE_TYPEDEF;
+        a.length = 7;
+        return a;
+    } else if (*str == 'u' && *(str + 1) == 'n' && *(str + 2) == 'i' && *(str + 3) == 'o' && *(str + 4) == 'n') {
+        a.token_code = TK_CODE_UNION;
+        a.length = 5;
+        return a;
+    } else if (*str == 'u' && *(str + 1) == 'n' && *(str + 2) == 's' && *(str + 3) == 'i' && *(str + 4) == 'g' &&
+               *(str + 5) == 'n' && *(str + 6) == 'e' && *(str + 7) == 'd') {
+        a.token_code = TK_CODE_UNSIGNED;
+        a.length = 8;
+        return a;
+    } else if (*str == 'v' && *(str + 1) == 'o' && *(str + 2) == 'i' && *(str + 3) == 'd') {
+        a.token_code = TK_CODE_VOID;
+        a.length = 4;
+        return a;
+    } else if (*str == 'v' && *(str + 1) == 'o' && *(str + 2) == 'l' && *(str + 3) == 'a' && *(str + 4) == 't' &&
+               *(str + 5) == 'i' && *(str + 6) == 'l' && *(str + 7) == 'e') {
+        a.token_code = TK_CODE_VOLATILE;
+        a.length = 8;
+        return a;
+    } else if (*str == 'w' && *(str + 1) == 'h' && *(str + 2) == 'i' && *(str + 3) == 'l' && *(str + 4) == 'e') {
+        a.token_code = TK_CODE_WHILE;
+        a.length = 5;
+        return a;
+    } else {
+        a.token_code = -1;
+        a.length = 0;
+        return a;
+    }
+}
+
+CToken *get_keyword_token(FILE *fp, char ch) {
+    char keywords[32][9] = {"auto", "break", "case", "char", "const", "continue", "default",
+                            "do", "double", "else", "enum", "extern", "float", "for", "goto",
+                            "if", "int", "long", "register", "return", "short", "signed",
+                            "sizeof", "static", "struct", "switch", "typedef", "union",
+                            "unsigned", "void", "volatile", "while"};
+
+    int str_length = 0;
+    CToken *token2 = malloc(sizeof(CToken));
+    while ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+        str_length++;
+        ch = fgetc(fp);
+    }
+
+    if (ch == EOF)
+        fseek(fp, -str_length, SEEK_END);
+    else
+        fseek(fp, -str_length-1, SEEK_CUR);
+
+    // copy string to token
+    token2->source = malloc((str_length + 1) * sizeof(char));
+    for (int i = 0; i < str_length; ++i) {
+        ch = fgetc(fp);
+        *(token2->source + i) = ch;
+    }
+    *(token2->source + str_length) = '\0';
+    fcf keyword = is_keyword(token2->source);
+    if (keyword.token_code > -1 ) {
+
+        printf("KEY WORD!!!!!!! %s\n", token2->source);
+        token2->span_line = linenumber;
+        return token2;
+    }
+
+
+
+
+    return token2;
+}
+
+int is_begin_of_identificator(const char ch) {
+    return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_');
+}
+
+int is_begin_of_keyword(const char ch) {
+    return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'));
+}
+
+int is_operator_one(char ch){
+    int a = 0;
+    char operators[46][3] = {"!", "%", "^", "&", "*", "-", "+", "=", "|", ".", "<", ">", "/", "?", "~", "+=", "-=",
+                             "*=",
+                             "/=", "%=", "<=", ">=", "&=", "^=", "|=", "++", "--", "<<", ">>", "==", "!=", "&&", "||",
+                             "-->", "<<=", ">>=", "(", ")", "[", "]", "{", "}", ",", ";", ":", "..."};
+    for (int i = 0; i <46 ; ++i) {
+        if(ch == operators[i][0]){
+            a = 1;
+        }
+    }
+    return a;
+}
+
 
 
 
@@ -811,11 +811,6 @@ CToken *get_next_token(FILE *fp) {
         }
 
         //keyword
-        if (is_begin_of_keyword(ch)) {
-            get_keyword_token(fp, ch);
-            ch = fgetc(fp);
-
-        }
 
 
 
