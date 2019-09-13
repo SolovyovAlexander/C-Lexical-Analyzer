@@ -41,7 +41,7 @@ int is_keyword_one(char str) {
                             "sizeof", "static", "struct", "switch", "typedef", "union",
                             "unsigned", "void", "volatile", "while"};
     for (int i = 0; i < 32; ++i) {
-        if (strcmp(keywords[i], str) == 0) {
+        if (strcmp(keywords[i], &str) == 0) {
             return 1;
         }
     }
@@ -721,6 +721,8 @@ CToken *get_next_token(FILE *fp) {
         if (ch == '\n') {
             linenumber++;
             ch = fgetc(fp);
+            if (ch == '\r') ch = fgetc(fp);
+            continue;
         }
         //avoid comments
         if (ch == '/') {
@@ -728,6 +730,8 @@ CToken *get_next_token(FILE *fp) {
                 while (ch != '\n') { ch = fgetc(fp); }
                 linenumber++;
                 ch = fgetc(fp);
+                if (ch == '\r') ch = fgetc(fp);
+                continue;
             } else
                 fseek(fp, -1, SEEK_CUR);
         }
@@ -737,11 +741,12 @@ CToken *get_next_token(FILE *fp) {
             while (ch != '\n') { ch = fgetc(fp); }
             linenumber++;
             ch = fgetc(fp);
+            if (ch == '\r') ch = fgetc(fp);
+            continue;
         }
 
         //check string constant
         if (ch == '"') {
-
             return get_string_token(fp);
         }
 
