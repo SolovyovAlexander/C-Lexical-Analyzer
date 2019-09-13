@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Valery/Documents/GitHub/C-Lexical-Analyzer/scanner.c
+ctype.h
+-
+scanner.h
+C:/Users/Valery/Documents/GitHub/C-Lexical-Analyzer/scanner.h
+
+C:/Users/Valery/Documents/GitHub/C-Lexical-Analyzer/scanner.h
+stdio.h
+-
+stdlib.h
+-
+token.h
+C:/Users/Valery/Documents/GitHub/C-Lexical-Analyzer/token.h
+string.h
+C:/Users/Valery/Documents/GitHub/C-Lexical-Analyzer/string.h
+
+C:/Users/Valery/Documents/GitHub/C-Lexical-Analyzer/token.h
+

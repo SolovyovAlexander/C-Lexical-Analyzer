@@ -96,8 +96,8 @@
 //String const
 #define  TK_CODE_STRING 78
 
-//IDENTIFIERS
-#define  TK_CODE_IDENTIFIER 79
+//IDENTIFICATORS
+#define  TK_CODE_IDENTIFICATOR 79
 
 
 struct CToken {
