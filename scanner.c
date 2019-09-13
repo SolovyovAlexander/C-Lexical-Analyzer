@@ -764,6 +764,8 @@ CToken *get_next_token(FILE *fp) {
         if (ch == '\n') {
             linenumber++;
             ch = fgetc(fp);
+            if (ch == '\r') ch = fgetc(fp);
+            continue;
         }
         //avoid comments
         if (ch == '/') {
@@ -771,6 +773,8 @@ CToken *get_next_token(FILE *fp) {
                 while (ch != '\n') { ch = fgetc(fp); }
                 linenumber++;
                 ch = fgetc(fp);
+                if (ch == '\r') ch = fgetc(fp);
+                continue;
             } else
                 fseek(fp, -1, SEEK_CUR);
         }
@@ -780,6 +784,8 @@ CToken *get_next_token(FILE *fp) {
             while (ch != '\n') { ch = fgetc(fp); }
             linenumber++;
             ch = fgetc(fp);
+            if (ch == '\r') ch = fgetc(fp);
+            continue;
         }
 
         //check string constant
