@@ -12,7 +12,7 @@ int main() {
 
     FILE *fp;
 
-    fp = fopen(file_name, "r"); // read mode
+    fp = fopen("D:\\C-Lexical-Analyzer\\test.txt", "r"); // read mode
 
     if (fp == NULL) {
         perror("Error while opening the file.\n");

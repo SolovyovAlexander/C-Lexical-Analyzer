@@ -97,7 +97,7 @@
 #define  TK_CODE_STRING 78
 
 //IDENTIFIERS
-#define  TK_CODE_IDENTIFIER 79
+#define  TK_CODE_IDENTIFICATOR 79
 
 
 struct CToken {
