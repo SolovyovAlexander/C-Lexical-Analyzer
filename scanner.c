@@ -256,7 +256,7 @@ CToken *get_identificator_token(FILE *fp, char ch) {
     token2->code = TK_CODE_IDENTIFICATOR;
     token2->span_line = linenumber;
     *(token2->source + str_length) = '\0';
-    printf("%s\n", token2->source);
+    printf("IDENTIFIER %s\n", token2->source);
 
     return token2;
 }
@@ -316,7 +316,7 @@ CToken *get_keyword_token(FILE *fp, char ch) {
 
     if (keyword.token_code > -1 ) {
 
-        printf("KEY WORD!!!!!!! %s\n", token2->source);
+        printf("KEYWORD %s\n", token2->source);
         token2->span_line = linenumber;
         return token2;
     }
@@ -419,7 +419,7 @@ CToken *get_string_token(FILE *fp) {
     token2->code = TK_CODE_STRING;
     token2->span_line = linenumber;
     *(token2->source + str_length) = '\0';
-    printf("%s\n", token2->source);
+    printf("STRING CONSTANT %s\n", token2->source);
 
     fgetc(fp);
 
@@ -482,7 +482,7 @@ CToken *get_char_token(FILE *fp) {
         exit(-1);
     }
     token->source = src;
-    printf("This is CHAR %s\n", token->source);
+    printf("CHAR CONSTANT %s\n", token->source);
     return token;
 
 }
@@ -572,7 +572,7 @@ CToken *get_next_value(FILE *fp, char start) {
     }
     token->code = TK_CODE_INT;
     token->source = src;
-    printf("%s\n", token->source);
+    printf("INTEGER CONSTANT %s\n", token->source);
     return token;
 }
 
@@ -611,7 +611,7 @@ CToken *get_operator_token(FILE *fp, char ch) {
             token2->code = operat.token_code;
         }
         token2->source = operators[token2->code];
-        printf("%s\n", token2->source);
+        printf("OPERATOR %s\n", token2->source);
         return token2;
     }
     if(!flag){
@@ -625,7 +625,9 @@ CToken *get_next_token(FILE *fp) {
 
     char ch;
 
-    CToken *token2;
+    CToken *token2 = malloc(sizeof(CToken));
+    token2->code = -1;
+
     ch = (char)fgetc(fp);
     while (ch != EOF) {
         if (ch == '\n') {

@@ -12,7 +12,7 @@ int main() {
 
     FILE *fp;
 
-    fp = fopen("D:\\C-Lexical-Analyzer\\test.txt", "r"); // read mode
+    fp = fopen(file_name, "r"); // read mode
 
     if (fp == NULL) {
         perror("Error while opening the file.\n");
@@ -20,13 +20,9 @@ int main() {
     }
     int i =0;
     CToken* token;
-
-    while (i<10000 ) {
-
-        get_next_token(fp);
-
-        i++;
-
+    token = get_next_token(fp);
+    while (token->code != -1) {
+        token = get_next_token(fp);
     }
 
 
