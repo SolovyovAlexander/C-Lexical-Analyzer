@@ -186,7 +186,7 @@ fcf is_keyword(const char *str) {
         a.token_code = TK_CODE_UNSIGNED;
         a.length = 8;
         return a;
-    } else if (*str == 'v' && *(str + 1) == 'o' && *(str + 2) == 'i' && *(str + 3) == 'd' &&) {
+    } else if (*str == 'v' && *(str + 1) == 'o' && *(str + 2) == 'i' && *(str + 3) == 'd') {
         a.token_code = TK_CODE_VOID;
         a.length = 4;
         return a;
@@ -690,7 +690,9 @@ CToken *get_operator_token(FILE *fp, char ch) {
     fcf operat = is_operator(kek);
     if (operat.token_code > -1) {
         if (operat.length == 1) {
-            fseek(fp, -2, SEEK_CUR);
+            if(!flag){
+                fseek(fp, -2, SEEK_CUR);
+            }
             token2->code = operat.token_code;
         } else if (operat.length == 2) {
             fseek(fp, -1, SEEK_CUR);
